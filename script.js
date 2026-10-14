@@ -3184,7 +3184,8 @@ function setSession(r){
 function sbDrop(){Net.session=null;Net.online=false;Net.uid=null;saveSession(null);}
 function sbReq(path,o){
   o=o||{};
-  var h={'apikey':SB_KEY,'Content-Type':'application/json','Authorization':'Bearer '+(o.token||SB_KEY)};
+  var h={'apikey':SB_KEY,'Content-Type':'application/json'};
+  if(o.token)h.Authorization='Bearer '+o.token;else if(SB_KEY.slice(0,3)==='eyJ')h.Authorization='Bearer '+SB_KEY;
   if(o.prefer)h.Prefer=o.prefer;
   return fetch(SB_URL+path,{method:o.method||'GET',headers:h,body:o.body?JSON.stringify(o.body):undefined}).then(function(r){
     return r.text().then(function(t){
