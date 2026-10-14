@@ -126,6 +126,8 @@ addTheme('theme-eis','Eisblau','Ice Blue','#7fe3ff',100);
 addTheme('theme-violett','Violett','Violet','#c58cff',100);
 addTheme('theme-orange','Mandarine','Tangerine','#ff9f5a',100);
 addTheme('theme-regenbogen','Regenbogen','Rainbow','#8ea0ff',350,true);
+addTheme('theme-limette','Limette','Lime','#b6f05a',0);
+addTheme('theme-rosa','Flamingo','Flamingo','#ff8fd0',0);
 addRew('theme-gold','theme','Gold','Gold',{accent:'#ffd24a',secret:true});
 addRew('g-stapel','game','Stapel','Stack',{game:'stapel'});
 addRew('g-schwerkraft','game','Schwerkraftläufer','Gravity Runner',{game:'lauf'});
@@ -138,6 +140,8 @@ addRew('g-paare','game','Paare','Pairs',{game:'paare'});
 addRew('g-nova','game','Nova','Nova',{game:'nova'});
 addRew('g-schuss','game','Schießbude','Shooting Gallery',{game:'schuss'});
 addRew('g-koch','game','Kochchaos','Kitchen Chaos',{game:'koch'});
+addRew('g-hoehe','game','Höhenflug','Glide',{game:'hoehe'});
+addRew('g-rechnen','game','Kopfrechnen','Mental Math',{game:'rechnen'});
 var TYPE_LABEL={game:{de:'Spiel',en:'Game'},bg:{de:'Hintergrund',en:'Background'},cursor:{de:'Mauszeiger',en:'Cursor'},theme:{de:'Farbthema',en:'Color theme'}};
 function rewardLabel(id){var r=REW[id];return L(TYPE_LABEL[r.type])+(lang==='de'?' „'+L(r.name)+'“':' “'+L(r.name)+'”');}
 
@@ -258,7 +262,7 @@ var GAMES={
     missions:[
       {id:'sc1',coins:20,text:{de:'Erziele 30 Punkte in einer Runde.',en:'Score 30 points in one round.'},test:function(s){return s.score>=30;},reward:'bg-karneval'},
       {id:'sc2',coins:30,text:{de:'Triff 10 Ziele hintereinander.',en:'Hit 10 targets in a row.'},test:function(s){return s.maxCombo>=10;},reward:'cur-zielscheibe'},
-      {id:'sc3',coins:50,text:{de:'Triff 5 Volltreffer in einer Runde.',en:'Land 5 bullseyes in one round.'},test:function(s){return s.bullseyes>=5;}},
+      {id:'sc3',coins:50,reward:'g-rechnen',text:{de:'Triff 5 Volltreffer in einer Runde.',en:'Land 5 bullseyes in one round.'},test:function(s){return s.bullseyes>=5;}},
       {id:'sch',hard:true,coins:350,text:{de:'Erziele 110 Punkte in einer Runde.',en:'Score 110 points in one round.'},test:function(s){return s.score>=110;}}]},
   koch:{hue:100,name:{de:'Kochchaos',en:'Kitchen Chaos'},unit:{de:'Bestellungen',en:'orders'},main:'served',unlock:'g-koch',
     secret:{id:'xs1',text:{de:'Serviere einen leeren Burger: nur Brötchen, nichts dazwischen.',en:'Serve an empty burger: just buns, nothing in between.'}},
@@ -268,18 +272,36 @@ var GAMES={
     missions:[
       {id:'k1',coins:20,text:{de:'Serviere 5 Bestellungen in einer Schicht.',en:'Serve 5 orders in one shift.'},test:function(s){return s.served>=5;},reward:'bg-kueche'},
       {id:'k2',coins:30,text:{de:'Serviere 4 Bestellungen ohne Fehler hintereinander.',en:'Serve 4 orders in a row without a mistake.'},test:function(s){return s.streak>=4;},reward:'cur-loeffel'},
-      {id:'k3',coins:50,text:{de:'Brate 5 Patties perfekt.',en:'Grill 5 patties perfectly.'},test:function(s){return s.perfect>=5;}},
+      {id:'k3',coins:50,reward:'g-hoehe',text:{de:'Brate 5 Patties perfekt.',en:'Grill 5 patties perfectly.'},test:function(s){return s.perfect>=5;}},
       {id:'kh',hard:true,coins:350,text:{de:'Serviere 20 Bestellungen in einer Schicht.',en:'Serve 20 orders in one shift.'},test:function(s){return s.served>=20;}}]}
+  ,hoehe:{hue:175,name:{de:'Höhenflug',en:'Glide'},unit:{de:'Tore',en:'gates'},main:'score',unlock:'g-hoehe',
+    blurb:{de:'Dein Funke fällt ständig. Gib im richtigen Moment Schub und fliege durch die Tore.',en:'Your spark keeps falling. Thrust at the right moment and fly through the gates.'},
+    hint:{de:'Klicke, tippe oder drücke die Leertaste für Schub nach oben. Sterne zählen für Missionen, ein Treffer in der Mitte zählt als perfekt.',en:'Click, tap or press Space to thrust upward. Stars count for missions, hitting the middle counts as perfect.'},
+    art:"<svg viewBox='0 0 64 64' fill='currentColor'><rect x='10' y='0' width='12' height='22'/><rect x='10' y='42' width='12' height='22'/><rect x='40' y='0' width='12' height='32' opacity='.7'/><rect x='40' y='50' width='12' height='14' opacity='.7'/><circle cx='31' cy='30' r='5'/></svg>",
+    missions:[
+      {id:'h1',coins:20,reward:'theme-limette',text:{de:'Fliege durch 8 Tore.',en:'Fly through 8 gates.'},test:function(s){return s.gates>=8;}},
+      {id:'h2',coins:30,text:{de:'Sammle 5 Sterne in einem Flug.',en:'Collect 5 stars in one flight.'},test:function(s){return s.stars>=5;}},
+      {id:'h3',coins:50,text:{de:'Triff 6 Tore perfekt in der Mitte.',en:'Hit the middle of 6 gates.'},test:function(s){return s.perfect>=6;}},
+      {id:'hh',hard:true,coins:350,text:{de:'Fliege durch 30 Tore.',en:'Fly through 30 gates.'},test:function(s){return s.gates>=30;}}]},
+  rechnen:{hue:255,name:{de:'Kopfrechnen',en:'Mental Math'},unit:{de:'Aufgaben',en:'problems'},main:'score',unlock:'g-rechnen',
+    blurb:{de:'Löse Rechenaufgaben, bevor die Zeit abläuft. Jede richtige Antwort bringt Zeit zurück.',en:'Solve sums before time runs out. Every right answer gives time back.'},
+    hint:{de:'Wähle die richtige Antwort per Klick oder mit den Tasten 1 bis 4. Richtig bringt 1,5 Sekunden, falsch kostet 4.',en:'Pick the right answer by click or with keys 1 to 4. Right adds 1.5 seconds, wrong costs 4.'},
+    art:"<svg viewBox='0 0 64 64' fill='none' stroke='currentColor' stroke-width='4' stroke-linecap='round'><path d='M12 20h16M20 12v16M36 20h16M12 46h16M36 40l16 12M52 40L36 52' /></svg>",
+    missions:[
+      {id:'r1',coins:20,reward:'theme-rosa',text:{de:'Löse 10 Aufgaben in einer Runde.',en:'Solve 10 problems in one round.'},test:function(s){return s.solved>=10;}},
+      {id:'r2',coins:30,text:{de:'Löse 8 Aufgaben in Folge ohne Fehler.',en:'Solve 8 problems in a row without a mistake.'},test:function(s){return s.streak>=8;}},
+      {id:'r3',coins:50,text:{de:'Löse 25 Aufgaben in einer Runde.',en:'Solve 25 problems in one round.'},test:function(s){return s.solved>=25;}},
+      {id:'rh',hard:true,coins:350,text:{de:'Löse 45 Aufgaben in einer Runde.',en:'Solve 45 problems in one round.'},test:function(s){return s.solved>=45;}}]}
 };
-var ORDER=['funken','echo','stapel','lauf','meteor','takt','orbit','puls','snake','ziegel','paare','nova','schuss','koch'];
+var ORDER=['funken','echo','stapel','lauf','meteor','takt','orbit','puls','snake','ziegel','paare','nova','schuss','koch','hoehe','rechnen'];
 var RANKS=[
   {min:0,name:{de:'Funkenfänger',en:'Spark Catcher'}},
   {min:6,name:{de:'Kartograf',en:'Cartographer'}},
   {min:14,name:{de:'Pfadfinder',en:'Pathfinder'}},
   {min:24,name:{de:'Entdecker',en:'Explorer'}},
   {min:34,name:{de:'Pionier',en:'Pioneer'}},
-  {min:48,name:{de:'Legende',en:'Legend'}},
-  {min:56,name:{de:'Neulandkönig',en:'Neuland Monarch'}}
+  {min:54,name:{de:'Legende',en:'Legend'}},
+  {min:64,name:{de:'Neulandkönig',en:'Neuland Monarch'}}
 ];
 var LOCK="<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V8a4 4 0 0 1 8 0v3'/></svg>";
 
@@ -321,7 +343,7 @@ function dbClearAll(){
 }
 
 /* ---------- Zustand ---------- */
-var S={missions:{},rewards:{},stats:{},settings:{bg:'bg-tiefe',cursor:'cur-standard',sound:true,lang:null,coins:0,egg:false,theme:'theme-standard',eggs:{},daily:null,ach:{},earned:0,langSwitched:false,night:false,profile:null,wheel:null,secrets:{}}};
+var S={missions:{},rewards:{},stats:{},settings:{bg:'bg-tiefe',cursor:'cur-standard',sound:true,lang:null,coins:0,egg:false,theme:'theme-standard',eggs:{},daily:null,ach:{},earned:0,langSwitched:false,night:false,profile:null,wheel:null,secrets:{},chal:null,chalN:0}};
 var view={name:'hub'},stopGame=null,resetAsk=false,collTab='bg';
 var $app=$('app'),$toasts=$('toasts'),$bg=$('bgfx'),$nav=$('nav');
 
@@ -374,16 +396,25 @@ function beep(f,d,type,v){
 
 /* ---------- Kopfleiste ---------- */
 var langOpen=false;
-function renderNav(bump){
-  var p=prof(),wa=wheelAvail('daily')||wheelAvail('gold');
-  var pic=p?avatarSvg(p.av,p.col,20):'<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="7" r="3.4"/><path d="M3.5 17c.8-3.2 3.3-4.8 6.5-4.8s5.7 1.6 6.5 4.8"/></svg>';
+function langMenuHtml(){
   var menu='';
   if(langOpen)menu='<ul class="langmenu" role="listbox" aria-label="Sprache / Language">'+LANGS.map(function(l){return '<li><button class="lopt" role="option" data-act="lang" data-id="'+l.c+'" aria-selected="'+(l.c===lang)+'" lang="'+l.c+'">'+flagSvg(l.c)+'<span>'+l.n+'</span></button></li>';}).join('')+'</ul>';
+  return '<div class="langwrap"><button class="btn ghost sm langbtn" data-act="langmenu" aria-haspopup="listbox" aria-expanded="'+langOpen+'" aria-label="Sprache / Language">'+flagSvg(lang)+'<span class="lbl">'+langName(lang)+'</span><svg class="caret" viewBox="0 0 10 6" width="9" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>'+menu+'</div>';
+}
+function renderNav(bump){
+  var p=prof();
+  if(!p||needAuth()){
+    $nav.innerHTML='<div class="nav-in"><span class="logo"><span class="mark"></span><span class="lt">Neuland</span></span><span class="sp"></span>'+langMenuHtml()+'<button class="btn ghost sm snd" data-act="sound" aria-pressed="'+!!S.settings.sound+'"><i class="dot'+(S.settings.sound?' on':'')+'"></i><span class="lbl">'+(S.settings.sound?X('Ton an','Sound on'):X('Ton aus','Sound off'))+'</span></button></div>';
+    return;
+  }
+  var wa=wheelAvail('daily')||wheelAvail('gold');
+  var pic=p?avatarSvg(p.av,p.col,20):'<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="7" r="3.4"/><path d="M3.5 17c.8-3.2 3.3-4.8 6.5-4.8s5.7 1.6 6.5 4.8"/></svg>';
   $nav.innerHTML='<div class="nav-in"><button class="logo" data-act="home" aria-label="Neuland Arcade"><span class="mark"></span><span class="lt">Neuland</span></button><span class="sp"></span>'+
     '<button class="btn ghost sm shopbtn" data-act="shop"><span class="shl">'+X('Shop','Shop')+'</span><span class="bal'+(bump?' bump':'')+'">'+COIN+coins()+'</span></button>'+
     '<button class="btn ghost sm wbtn" data-act="wheel" data-id="daily" aria-label="'+X('Glücksrad','Wheel of fortune')+'"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M10 2v16M2 10h16M4.3 4.3l11.4 11.4M15.7 4.3L4.3 15.7" opacity=".6"/></svg>'+(wa?'<i class="ndot"></i>':'')+'</button>'+
+    '<button class="btn ghost sm rbtn" data-act="rank" aria-label="'+X('Weltrangliste','World leaderboard')+'"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8v5a4 4 0 0 1-8 0zM6 5H3v1a3 3 0 0 0 3 3M14 5h3v1a3 3 0 0 1-3 3M10 12v3M6.5 17h7"/></svg></button>'+
     '<button class="btn ghost sm pbtn" data-act="profile" aria-label="'+X('Profil','Profile')+'">'+pic+'<span class="lbl">'+(p?esc(p.name):X('Profil','Profile'))+'</span></button>'+
-    '<div class="langwrap"><button class="btn ghost sm langbtn" data-act="langmenu" aria-haspopup="listbox" aria-expanded="'+langOpen+'" aria-label="Sprache / Language">'+flagSvg(lang)+'<span class="lbl">'+langName(lang)+'</span><svg class="caret" viewBox="0 0 10 6" width="9" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>'+menu+'</div>'+
+    langMenuHtml()+
     '<button class="btn ghost sm snd" data-act="sound" aria-pressed="'+!!S.settings.sound+'"><i class="dot'+(S.settings.sound?' on':'')+'"></i><span class="lbl">'+(S.settings.sound?X('Ton an','Sound on'):X('Ton aus','Sound off'))+'</span></button></div>';
 }
 
@@ -483,7 +514,7 @@ function renderHub(anim){
   var C=289.03,off=(C*(1-done/total)).toFixed(2);
   var foot;
   if(resetAsk){foot='<span class="warn">'+X('Alle Missionen und Belohnungen löschen?','Delete all missions and rewards?')+'</span><span class="acts"><button class="btn ghost sm" data-act="reset-yes">'+X('Ja, löschen','Yes, delete')+'</button><button class="btn ghost sm" data-act="reset-no">'+X('Abbrechen','Cancel')+'</button></span>';}
-  else{foot='<span>'+(persistent?X('Dein Fortschritt liegt in der IndexedDB-Datenbank dieses Browsers.','Your progress is stored in this browser’s IndexedDB database.'):X('IndexedDB ist hier nicht verfügbar. Der Fortschritt gilt nur, bis du die Seite schließt.','IndexedDB is not available here. Progress lasts only until you close the page.'))+'</span><span class="acts"><button class="btn ghost sm" data-act="reset-ask">'+X('Spielstand zurücksetzen','Reset progress')+'</button></span>';}
+  else{foot='<span>'+(persistent?X('Dein Fortschritt liegt in der IndexedDB-Datenbank dieses Browsers.','Your progress is stored in this browser’s IndexedDB database.'):X('IndexedDB ist hier nicht verfügbar. Der Fortschritt gilt nur, bis du die Seite schließt.','IndexedDB is not available here. Progress lasts only until you close the page.'))+'</span><span class="acts"><button class="btn ghost sm" data-act="reset-ask">'+X('Spielstand zurücksetzen','Reset progress')+'</button><button class="btn ghost sm" data-act="admin">Admin</button></span>';}
   var nextTxt=rk.next?Xn('Noch # Missionen bis ','Next: # missions to ',[rk.next.min-done])+L(rk.next.name):X('Alle Missionen geschafft.','Every mission cleared.');
   $app.style.removeProperty('--h');
   $app.className='app view view-hub'+(anim?' enter':'');
@@ -491,7 +522,7 @@ function renderHub(anim){
    '<section class="hero"><div><p class="eyebrow">'+(prof()?X('Willkommen zurück, ','Welcome back, ')+esc(prof().name):X('Spiele, die noch keiner kennt','Games nobody has seen before'))+'</p><h1 aria-label="Neuland Arcade">'+titleHtml()+'</h1><p class="sub">'+X('Schaffe Missionen und schalte neue Spiele, Hintergründe und Mauszeiger frei.','Clear missions to unlock new games, backgrounds and cursors.')+'</p></div>'+
    '<div class="rank"><div class="ring" role="img" aria-label="'+done+' / '+total+'"><svg viewBox="0 0 116 116"><circle class="bgc" cx="58" cy="58" r="46"/><circle class="fg" cx="58" cy="58" r="46" style="--off:'+off+'"/></svg><div class="n"><span id="cnt">'+(anim&&!reduced?0:done)+'</span><small>/ '+total+'</small></div></div>'+
    '<div><p class="lbl">'+X('Rang','Rank')+'</p><p class="name">'+L(rk.rank.name)+'</p><p class="nxt">'+nextTxt+'</p></div></div></section>'+
-   profileCtaHtml()+dailyHtml()+wheelPromoHtml()+'<div class="chips"><button class="chip chipbtn" data-act="shop">'+COIN+'<b>'+coins()+'</b> '+X('Münzen · Shop','coins · Shop')+'</button><span class="chip"><b>'+openGames+'/'+ORDER.length+'</b> '+X('Spiele','games')+'</span><span class="chip"><b>'+bgs.filter(owned).length+'/'+bgs.length+'</b> '+X('Hintergründe','backgrounds')+'</span><span class="chip"><b>'+curs.filter(owned).length+'/'+curs.length+'</b> '+X('Mauszeiger','cursors')+'</span></div>'+
+   profileCtaHtml()+dailyHtml()+chalHtml()+wheelPromoHtml()+'<div class="chips"><button class="chip chipbtn" data-act="shop">'+COIN+'<b>'+coins()+'</b> '+X('Münzen · Shop','coins · Shop')+'</button><button class="chip chipbtn" data-act="rank">'+X('Weltrangliste','World leaderboard')+'</button><span class="chip"><b>'+openGames+'/'+ORDER.length+'</b> '+X('Spiele','games')+'</span><span class="chip"><b>'+bgs.filter(owned).length+'/'+bgs.length+'</b> '+X('Hintergründe','backgrounds')+'</span><span class="chip"><b>'+curs.filter(owned).length+'/'+curs.length+'</b> '+X('Mauszeiger','cursors')+'</span></div>'+
    '<div class="sec-head"><h2 class="sec">'+X('Spiele','Games')+'</h2></div><div class="games">'+ORDER.map(cardHtml).join('')+'</div>'+
    '<div class="sec-head"><h2 class="sec">'+X('Sammlung','Collection')+'</h2><div class="tabs" role="tablist"><button role="tab" data-act="tab" data-id="bg" aria-selected="'+(collTab==='bg')+'">'+X('Hintergründe','Backgrounds')+'</button><button role="tab" data-act="tab" data-id="cursor" aria-selected="'+(collTab==='cursor')+'">'+X('Mauszeiger','Cursors')+'</button><button role="tab" data-act="tab" data-id="theme" aria-selected="'+(collTab==='theme')+'">'+X('Farben','Colors')+'</button></div></div>'+
    '<div class="coll">'+collHtml()+'</div>'+
@@ -531,6 +562,7 @@ function fillGame(){
   if(view.name!=='game')return;
   var g=GAMES[view.gid];
   $('gBack').textContent=X('← Übersicht','← Overview');
+  $('gRank').textContent=X('Rangliste','Leaderboard');
   $('gTitle').textContent=L(g.name);
   $('gHint').textContent=L(g.hint);
   $('pTitle').textContent=X('Missionen','Missions');
@@ -544,16 +576,18 @@ function renderGame(gid){
   $app.style.setProperty('--h',g.hue);
   $app.className='app view view-game enter';
   $app.innerHTML=
-   '<div class="gbar"><button class="btn ghost sm" data-act="back" id="gBack"></button><h2 id="gTitle"></h2><span class="best mono" id="best"></span></div>'+
+   '<div class="gbar"><button class="btn ghost sm" data-act="back" id="gBack"></button><h2 id="gTitle"></h2><span class="best mono" id="best"></span><button class="btn ghost sm" data-act="rank" data-id="'+gid+'" id="gRank"></button></div>'+
    '<div class="stage"><div class="cvwrap"><div class="frame"><canvas id="cv" tabindex="0"></canvas></div><p class="hint" id="gHint"></p></div><aside class="panel"><h3 id="pTitle"></h3><ol id="mlist"></ol></aside></div>';
   fillGame();
   var api={
     secret:function(id){completeSecret(gid,id);},
     report:function(stats){g.missions.forEach(function(m){if(!S.missions[m.id]&&m.test(stats))completeMission(gid,m);});},
     finish:function(stats){
-      var val=stats[g.main]||0,cur=S.stats[gid]||{best:0,plays:0};
+      var val=stats[g.main]||0,cur=S.stats[gid]||{best:0,plays:0},improved=val>(cur.best||0);
       cur={best:Math.max(cur.best||0,val),plays:(cur.plays||0)+1};
       S.stats[gid]=cur;dbPut('stats',gid,cur);updateBest();
+      if(improved)pushScores();
+      chalCheck(gid,val);
       if(new Date().getHours()<5&&!S.settings.night){S.settings.night=true;dbPut('settings','night',true);}
       checkAch();
     }
@@ -2489,6 +2523,179 @@ function setEquipped(id){
   applyLook();
 }
 
+/* ---------- Höhenflug ---------- */
+FACTORY.hoehe=function(o){
+  var ctx=o.ctx,api=o.api;
+  var BX=190,BR=13,GW2=30;
+  var st='ready',t0=0,tt=0,y=H/2,vy=0,gates=[],stars=[],score=0,perfect=0,pRun=0,starsN=0,parts=[],trail=[],lastX=0;
+  function stats(){return{score:score,gates:score,perfect:perfect,perfectRun:pRun,stars:starsN};}
+  function gap(){return Math.max(122,172-score*2.2);}
+  function speed(){return 165+Math.min(110,score*3.6);}
+  function addGate(x){
+    var g=gap(),cy=g/2+50+Math.random()*(H-g-100);
+    gates.push({x:x,cy:cy,base:cy,g:g,amp:score>=10?Math.min(46,(score-8)*3.5):0,ph:Math.random()*TAU,passed:false});
+    if(Math.random()<.45)stars.push({x:x+135,y:70+Math.random()*(H-140),got:false});
+    lastX=x;
+  }
+  function start(){st='play';y=H/2;vy=-120;gates=[];stars=[];score=0;perfect=0;pRun=0;starsN=0;parts=[];trail=[];addGate(W+60);while(lastX<W+700)addGate(lastX+270);}
+  function burst(x,yy,c,n){for(var i=0;i<n;i++){var a=Math.random()*TAU,s=50+Math.random()*190;parts.push({x:x,y:yy,vx:Math.cos(a)*s,vy:Math.sin(a)*s,t:0,l:.5,c:c});}}
+  function flap(){
+    if(st==='ready'||(st==='over'&&t0>.5)){start();return;}
+    if(st==='play'){vy=-340;beep(540,.05,'triangle',.03);burst(BX-8,y+6,'rgba(142,200,255,.9)',3);}
+  }
+  function die(){st='over';t0=0;burst(BX,y,'#ff9c7a',22);beep(110,.35,'sawtooth',.05);api.finish(stats());}
+  return{
+    update:function(dt){
+      tt+=dt;
+      if(st==='play'){
+        var sp=speed();
+        vy+=900*dt;if(vy>520)vy=520;y+=vy*dt;
+        trail.push({x:BX,y:y});if(trail.length>16)trail.shift();
+        trail.forEach(function(p){p.x-=sp*dt;});
+        for(var i=gates.length-1;i>=0;i--){
+          var g=gates[i];g.x-=sp*dt;
+          if(g.amp)g.cy=g.base+Math.sin(tt*1.6+g.ph)*g.amp;
+          if(g.x<-60){gates.splice(i,1);continue;}
+          if(Math.abs(g.x-BX)<GW2+BR-3&&(y-BR+3<g.cy-g.g/2||y+BR-3>g.cy+g.g/2)){die();return;}
+          if(!g.passed&&g.x+GW2<BX-BR){
+            g.passed=true;score++;
+            if(Math.abs(y-g.cy)<g.g*.2){perfect++;pRun++;burst(BX,y,'#ffd24a',10);}else pRun=0;
+            beep(660+Math.min(score,30)*12,.07,'triangle',.04);api.report(stats());
+          }
+        }
+        if(lastX-(gates.length?0:0)<W+500){addGate(lastX+270);}
+        lastX-=sp*dt;
+        for(var k=stars.length-1;k>=0;k--){
+          var s=stars[k];s.x-=sp*dt;
+          if(s.x<-30){stars.splice(k,1);continue;}
+          if(!s.got&&Math.hypot(s.x-BX,s.y-y)<BR+13){s.got=true;starsN++;burst(s.x,s.y,'#ffd24a',12);beep(990,.09,'triangle',.05);api.report(stats());}
+        }
+        if(y<BR||y>H-BR){die();return;}
+      }
+      if(st==='over')t0+=dt;
+      for(var q=parts.length-1;q>=0;q--){var p=parts[q];p.t+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.96;p.vy*=.96;if(p.t>=p.l)parts.splice(q,1);}
+    },
+    pointer:function(){flap();},
+    key:function(e){var k=e.key;if(k===' '||k==='ArrowUp'||k==='w'||k==='W'||k==='Enter'){flap();return true;}return false;},
+    draw:function(){
+      ctx.fillStyle='rgba(142,160,255,.07)';
+      for(var gx=0;gx<W;gx+=50)ctx.fillRect(((gx-(tt*40)%50)+50)%W,0,1,H);
+      gates.forEach(function(g){
+        var top=g.cy-g.g/2,bot=g.cy+g.g/2;
+        var gr=ctx.createLinearGradient(g.x-GW2,0,g.x+GW2,0);gr.addColorStop(0,'#2b8f9a');gr.addColorStop(.5,'#5ee0d0');gr.addColorStop(1,'#2b8f9a');
+        ctx.fillStyle=gr;
+        ctx.fillRect(g.x-GW2,-4,GW2*2,top+4);ctx.fillRect(g.x-GW2,bot,GW2*2,H-bot+4);
+        ctx.fillStyle='#b9fff4';ctx.fillRect(g.x-GW2-5,top-12,GW2*2+10,12);ctx.fillRect(g.x-GW2-5,bot,GW2*2+10,12);
+        ctx.fillStyle='rgba(255,210,74,.18)';ctx.fillRect(g.x-3,g.cy-g.g*.2,6,g.g*.4);
+      });
+      stars.forEach(function(s){
+        if(s.got)return;
+        ctx.save();ctx.translate(s.x,s.y);ctx.rotate(tt*1.5);ctx.fillStyle='#ffd24a';ctx.beginPath();
+        for(var i=0;i<10;i++){var a=i*PI/5,r=i%2?5:12;ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);}ctx.closePath();ctx.fill();ctx.restore();
+      });
+      trail.forEach(function(p,i){ctx.globalAlpha=i/trail.length*.5;ctx.fillStyle='#8ec8ff';ctx.beginPath();ctx.arc(p.x,p.y,BR*(i/trail.length),0,TAU);ctx.fill();});
+      ctx.globalAlpha=1;
+      if(st!=='over'||t0<.05){
+        var gg=ctx.createRadialGradient(BX,y,0,BX,y,BR*2.4);gg.addColorStop(0,'rgba(255,255,255,.95)');gg.addColorStop(.3,'#8ec8ff');gg.addColorStop(1,'rgba(142,200,255,0)');
+        ctx.fillStyle=gg;ctx.beginPath();ctx.arc(BX,y,BR*2.4,0,TAU);ctx.fill();
+      }
+      parts.forEach(function(p){ctx.globalAlpha=1-p.t/p.l;ctx.fillStyle=p.c;ctx.fillRect(p.x-2,p.y-2,4,4);});
+      ctx.globalAlpha=1;
+      T(ctx,String(score),W/2,38,{size:36,font:MONO,weight:700,align:'center'});
+      T(ctx,'★ '+starsN,W-24,30,{size:16,font:MONO,align:'right',color:'#ffd24a'});
+      if(st==='ready')overlay(ctx,o.name(),X('Klicke zum Starten','Click to start'),X('Klick oder Leertaste: Aufwärtsschub. Fliege durch die Tore.','Click or Space: thrust up. Fly through the gates.'));
+      if(st==='over')overlay(ctx,X('Abgestürzt','Crashed'),score+X(' Tore, ',' gates, ')+starsN+X(' Sterne',' stars'),X('Klicke für einen neuen Flug.','Click for a new flight.'));
+    }
+  };
+};
+
+/* ---------- Kopfrechnen ---------- */
+FACTORY.rechnen=function(o){
+  var ctx=o.ctx,api=o.api;
+  var BTN=[{x:70,y:268,w:320,h:84},{x:410,y:268,w:320,h:84},{x:70,y:368,w:320,h:84},{x:410,y:368,w:320,h:84}];
+  var st='ready',t0=0,tt=0,time=40,solved=0,streak=0,maxS=0,wrong=0,q=null,fb=null,parts=[];
+  function stats(){return{score:solved,solved:solved,streak:maxS,wrong:wrong};}
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+  function make(){
+    var lv=solved,a,b,c,txt,ans,r=Math.random();
+    if(lv<5){a=ri(2,12);b=ri(2,12);if(r<.5){txt=a+' + '+b;ans=a+b;}else{if(b>a){c=a;a=b;b=c;}txt=a+' − '+b;ans=a-b;}}
+    else if(lv<12){
+      if(r<.35){a=ri(12,60);b=ri(8,39);txt=a+' + '+b;ans=a+b;}
+      else if(r<.65){a=ri(30,99);b=ri(8,a-1);txt=a+' − '+b;ans=a-b;}
+      else{a=ri(3,9);b=ri(3,9);txt=a+' × '+b;ans=a*b;}
+    }else{
+      if(r<.4){a=ri(3,12);b=ri(6,12);txt=a+' × '+b;ans=a*b;}
+      else if(r<.7){a=ri(20,90);b=ri(10,60);c=ri(5,30);txt=a+' + '+b+' − '+c;ans=a+b-c;if(ans<0){c=ri(1,a);txt=a+' + '+b+' − '+c;ans=a+b-c;}}
+      else{a=ri(60,199);b=ri(20,99);if(Math.random()<.5){txt=a+' + '+b;ans=a+b;}else{txt=a+' − '+b;ans=a-b;}}
+    }
+    var opts=[ans],tries=0;
+    while(opts.length<4&&tries<60){
+      tries++;
+      var d=[1,2,3,10,-1,-2,-3,-10,5,-5,ri(1,9)*(Math.random()<.5?1:-1)][ri(0,10)],v=ans+d;
+      if(v>=0&&opts.indexOf(v)<0)opts.push(v);
+    }
+    for(var i=opts.length-1;i>0;i--){var j=ri(0,i),t=opts[i];opts[i]=opts[j];opts[j]=t;}
+    q={txt:txt,ans:ans,opts:opts,age:0};
+  }
+  function start(){st='play';time=40;solved=0;streak=0;maxS=0;wrong=0;fb=null;parts=[];make();}
+  function burst(x,y,c){for(var i=0;i<14;i++){var a=Math.random()*TAU,s=60+Math.random()*180;parts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,t:0,l:.5,c:c});}}
+  function pick(i){
+    if(st!=='play'||i<0||i>=q.opts.length)return;
+    var b=BTN[i];
+    if(q.opts[i]===q.ans){
+      solved++;streak++;if(streak>maxS)maxS=streak;time=Math.min(60,time+1.5);
+      fb={i:i,ok:true,t:0};burst(b.x+b.w/2,b.y+b.h/2,'#7cf0c9');beep(560+Math.min(streak,12)*40,.07,'triangle',.05);
+      api.report(stats());make();
+    }else{
+      wrong++;streak=0;time-=4;fb={i:i,ok:false,t:0};burst(b.x+b.w/2,b.y+b.h/2,'#ff9c7a');beep(150,.18,'sawtooth',.04);
+      if(time<=0){time=0;end();}
+    }
+  }
+  function end(){st='over';t0=0;beep(200,.3,'sawtooth',.05);api.finish(stats());}
+  return{
+    update:function(dt){
+      tt+=dt;
+      if(st==='play'){time-=dt;if(q)q.age+=dt;if(time<=0){time=0;end();}}
+      if(st==='over')t0+=dt;
+      if(fb){fb.t+=dt;if(fb.t>.3)fb=null;}
+      for(var k=parts.length-1;k>=0;k--){var p=parts[k];p.t+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.95;p.vy*=.95;if(p.t>=p.l)parts.splice(k,1);}
+    },
+    pointer:function(p){
+      if(st==='ready'||(st==='over'&&t0>.5)){start();return;}
+      for(var i=0;i<BTN.length;i++){var b=BTN[i];if(p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h){pick(i);return;}}
+    },
+    key:function(e){
+      var k=e.key;
+      if(k>='1'&&k<='4'){if(st==='play'){pick(Number(k)-1);}else if(st==='ready'||(st==='over'&&t0>.5))start();return true;}
+      if(k===' '||k==='Enter'){if(st==='ready'||(st==='over'&&t0>.5))start();return true;}
+      return false;
+    },
+    draw:function(){
+      var fr=Math.max(0,Math.min(1,time/60));
+      ctx.fillStyle='rgba(255,255,255,.08)';ctx.fillRect(40,24,W-80,10);
+      ctx.fillStyle=fr<.25?'#ff7d6a':'#7cf0c9';ctx.fillRect(40,24,(W-80)*fr,10);
+      T(ctx,time.toFixed(1)+' s',40,56,{size:16,font:MONO,color:'#9aa3bd'});
+      T(ctx,String(solved),W-40,56,{size:22,font:MONO,weight:700,align:'right'});
+      if(streak>1)T(ctx,'×'+streak,W/2,56,{size:16,font:MONO,align:'center',color:'#ffd24a'});
+      if(q){
+        T(ctx,q.txt+' = ?',W/2,160,{size:64,weight:800,font:DISP,align:'center'});
+        for(var i=0;i<BTN.length;i++){
+          var b=BTN[i],hot=fb&&fb.i===i;
+          ctx.fillStyle=hot?(fb.ok?'rgba(124,240,201,.35)':'rgba(255,124,106,.35)'):'rgba(142,160,255,.14)';
+          ctx.strokeStyle=hot?(fb.ok?'#7cf0c9':'#ff7d6a'):'rgba(142,160,255,.45)';ctx.lineWidth=2;
+          ctx.beginPath();if(ctx.roundRect)ctx.roundRect(b.x,b.y,b.w,b.h,16);else ctx.rect(b.x,b.y,b.w,b.h);ctx.fill();ctx.stroke();
+          T(ctx,String(q.opts[i]),b.x+b.w/2,b.y+b.h/2+2,{size:38,font:MONO,weight:700,align:'center'});
+          T(ctx,String(i+1),b.x+16,b.y+16,{size:13,font:MONO,color:'#9aa3bd'});
+        }
+      }
+      parts.forEach(function(p){ctx.globalAlpha=1-p.t/p.l;ctx.fillStyle=p.c;ctx.fillRect(p.x-2,p.y-2,4,4);});
+      ctx.globalAlpha=1;
+      if(st==='ready')overlay(ctx,o.name(),X('Klicke zum Starten','Click to start'),X('Richtig gibt Zeit, falsch kostet Zeit. Tasten 1 bis 4 gehen auch.','Right adds time, wrong costs time. Keys 1 to 4 work too.'));
+      if(st==='over')overlay(ctx,X('Zeit abgelaufen','Time is up'),solved+X(' gelöst, beste Serie ',' solved, best streak ')+maxS,X('Klicke für eine neue Runde.','Click for a new round.'));
+    }
+  };
+};
+
 /* ---------- Tagesbonus ---------- */
 var DAILY=[10,15,20,25,30,40,100];
 function pad2(n){return n<10?'0'+n:''+n;}
@@ -2523,6 +2730,34 @@ function claimDaily(){
   checkAch();
 }
 
+
+/* ---------- Tagesherausforderung ---------- */
+var CHAL_COINS=40;
+function chalToday(){
+  var t=todayStr(),c=S.settings.chal;
+  if(c&&c.day===t&&GAMES[c.g])return c;
+  var open=ORDER.filter(isOpen),h=0;
+  for(var i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))%100003;
+  var g=open[h%open.length],b=bestOf(g);
+  c={day:t,g:g,t:b>0?Math.max(1,Math.ceil(b*.75)):1,done:false};
+  S.settings.chal=c;dbPut('settings','chal',c);
+  return c;
+}
+function chalText(c){return L(GAMES[c.g].name)+': '+(c.t<=1&&bestOf(c.g)<1?X('Erziele mindestens 1 ','Reach at least 1 ')+L(GAMES[c.g].unit):Xn('Erreiche mindestens # ','Reach at least # ',[c.t])+L(GAMES[c.g].unit));}
+function chalCheck(gid,val){
+  var c=chalToday();
+  if(c.done||c.g!==gid||val<c.t)return;
+  c.done=true;S.settings.chalN=(Number(S.settings.chalN)||0)+1;
+  dbPut('settings','chal',c);dbPut('settings','chalN',S.settings.chalN);
+  addCoins(CHAL_COINS);
+  pushToast({t1:X('Tagesherausforderung geschafft','Daily challenge complete'),t2:L(GAMES[gid].name),t3:'+'+CHAL_COINS+X(' Münzen',' coins')});
+  confetti();renderNav(true);
+}
+function chalHtml(){
+  var c=chalToday();
+  return '<section class="daily chal'+(c.done?'':' ready')+'"><div class="dtxt"><p class="eyebrow">'+X('Tagesherausforderung','Daily challenge')+'</p><p class="dttl">'+esc(chalText(c))+'</p><p class="dsub">'+(c.done?X('Geschafft. Morgen wartet eine neue Herausforderung.','Done. A new challenge waits tomorrow.'):Xn('Belohnung: # Münzen. Das Ziel passt sich deinem Bestwert an.','Reward: # coins. The goal adapts to your best score.',[CHAL_COINS]))+'</p></div>'+(c.done?'':'<button class="btn gold" data-act="open-game" data-id="'+c.g+'">'+X('Spielen','Play')+'</button>')+'</section>';
+}
+
 /* ---------- Erfolge ---------- */
 function plays(){var n=0;Object.keys(S.stats).forEach(function(k){n+=(S.stats[k]&&S.stats[k].plays)||0;});return n;}
 function hardStat(){var a=allMissions().filter(function(m){return m.hard;});return{done:a.filter(function(m){return S.missions[m.id];}).length,total:a.length};}
@@ -2550,6 +2785,9 @@ var ACH=[
   {id:'wheelbig',coins:50,name:{de:'Jackpot',en:'Jackpot'},desc:{de:'Gewinne bei einem Dreh 150 Münzen oder mehr.',en:'Win 150 coins or more on a single spin.'},test:function(){return wheelState().big>=150;}},
   {id:'profile',coins:15,name:{de:'Gesicht zeigen',en:'Show Your Face'},desc:{de:'Erstelle dein Profil.',en:'Create your profile.'},test:function(){return !!prof();}},
   {id:'newgames',coins:40,name:{de:'Schütze und Koch',en:'Shooter and Chef'},desc:{de:'Schalte Schießbude und Kochchaos frei.',en:'Unlock Shooting Gallery and Kitchen Chaos.'},test:function(){return isOpen('schuss')&&isOpen('koch');}},
+  {id:'chal1',coins:20,name:{de:'Tagesaufgabe',en:'Daily Task'},desc:{de:'Schaffe eine Tagesherausforderung.',en:'Complete a daily challenge.'},test:function(){return (S.settings.chalN||0)>=1;}},
+  {id:'chal7',coins:80,name:{de:'Routinier',en:'Old Hand'},desc:{de:'Schaffe 7 Tagesherausforderungen.',en:'Complete 7 daily challenges.'},test:function(){return (S.settings.chalN||0)>=7;}},
+  {id:'newgames2',coins:40,name:{de:'Flieger und Rechner',en:'Pilot and Calculator'},desc:{de:'Schalte Höhenflug und Kopfrechnen frei.',en:'Unlock Glide and Mental Math.'},test:function(){return isOpen('hoehe')&&isOpen('rechnen');}},
   {id:'goldkey',coins:100,secret:true,name:{de:'Goldene Entdeckung',en:'Golden Discovery'},desc:{de:'Du hast eine geheime Mission gelöst.',en:'You solved a secret mission.'},test:function(){return !!secretsMap().xs1;}},
   {id:'konami',coins:20,secret:true,name:{de:'Retro-Held',en:'Retro Hero'},desc:{de:'Du kennst den Code der Codes.',en:'You know the code of codes.'},test:function(){return !!eggs().konami;}},
   {id:'logo',coins:15,secret:true,name:{de:'Neugierig',en:'Curious'},desc:{de:'Das Logo hat dir keine Ruhe gelassen.',en:'The logo could not leave you alone.'},test:function(){return !!eggs().logo;}},
@@ -2613,6 +2851,8 @@ function sanitizeSave(d){
   if(s.profile&&typeof s.profile.name==='string'){var pn=cleanName(s.profile.name);if(pn)o.profile={name:pn,av:Math.max(0,Math.min(AV_G.length-1,Math.floor(Number(s.profile.av)||0))),col:AV_COLS.indexOf(s.profile.col)>-1?s.profile.col:AV_COLS[0],title:TITLES.some(function(t){return t.id===s.profile.title;})?s.profile.title:'',since:Number(s.profile.since)||Date.now()};}
   o.daily=null;
   if(s.daily&&/^\d{4}-\d{2}-\d{2}$/.test(String(s.daily.last)))o.daily={last:String(s.daily.last),streak:Math.max(0,Math.floor(Number(s.daily.streak)||0))};
+  o.chal=null;o.chalN=Math.min(9999,Math.max(0,Math.floor(Number(s.chalN)||0)));
+  if(s.chal&&/^\d{4}-\d{2}-\d{2}$/.test(String(s.chal.day))&&GAMES[s.chal.g])o.chal={day:String(s.chal.day),g:String(s.chal.g),t:Math.max(1,Math.floor(Number(s.chal.t)||1)),done:!!s.chal.done};
   o.ach={};ACH.forEach(function(a){if(s.ach&&s.ach[a.id])o.ach[a.id]=Number(s.ach[a.id])||Date.now();});
   if(o.egg)out.rewards['cur-pixel']=out.rewards['cur-pixel']||{at:Date.now(),secret:true};
   /* Belohnungen abgeschlossener Missionen sicherstellen */
@@ -2628,16 +2868,16 @@ function readImportFile(file){
       if(!d||d.app!=='neuland-arcade'||typeof d.missions!=='object'||typeof d.settings!=='object')throw new Error('bad');
       pendingImport=sanitizeSave(d);saveMsg='';
     }catch(e){pendingImport=null;saveMsg=X('Diese Datei ist kein gültiger Spielstand.','This file is not a valid save.');}
-    if(view.name==='profile')renderProfile(false);
+    if(view.name==='profile'||view.name==='gate')renderEdit();
   };
-  fr.onerror=function(){saveMsg=X('Die Datei konnte nicht gelesen werden.','The file could not be read.');if(view.name==='profile')renderProfile(false);};
+  fr.onerror=function(){saveMsg=X('Die Datei konnte nicht gelesen werden.','The file could not be read.');if(view.name==='profile'||view.name==='gate')renderEdit();};
   fr.readAsText(file);
 }
 function applyImport(){
   var p=pendingImport;if(!p)return;
   pendingImport=null;
   S.missions=p.missions;S.rewards=p.rewards;S.stats=p.stats;
-  var keep={bg:'bg-tiefe',cursor:'cur-standard',theme:'theme-standard',sound:true,lang:lang,coins:0,egg:false,eggs:{},daily:null,ach:{},earned:0,langSwitched:false,night:false,profile:null,wheel:null,secrets:{}};
+  var keep={bg:'bg-tiefe',cursor:'cur-standard',theme:'theme-standard',sound:true,lang:lang,coins:0,egg:false,eggs:{},daily:null,ach:{},earned:0,langSwitched:false,night:false,profile:null,wheel:null,secrets:{},chal:null,chalN:0};
   S.settings={};Object.keys(keep).forEach(function(k){S.settings[k]=p.settings[k]!==undefined?p.settings[k]:keep[k];});
   if(!owned(S.settings.bg))S.settings.bg='bg-tiefe';
   if(!owned(S.settings.cursor))S.settings.cursor='cur-standard';
@@ -2652,7 +2892,8 @@ function applyImport(){
     return Promise.all(ps);
   });
   saveMsg=X('Der Spielstand wurde geladen.','The save was loaded.');
-  applyLook();renderNav();renderProfile(false);
+  applyLook();renderNav();pushScores();
+  if(view.name==='gate'){if(prof())renderHub(true);else renderGate(false);}else renderProfile(false);
 }
 
 /* ---------- Profil und Räder ---------- */
@@ -2854,9 +3095,9 @@ function editorHtml(){
     '<label class="plabel" for="pname">'+X('Name','Name')+'</label><input id="pname" class="pinput" type="text" maxlength="16" autocomplete="off" spellcheck="false" value="'+esc(d.name)+'" placeholder="'+X('Dein Name','Your name')+'">'+
     '<p class="plabel">'+X('Avatar','Avatar')+'</p><div class="avgrid">'+avs+'</div>'+
     '<p class="plabel">'+X('Farbe','Color')+'</p><div class="colgrid">'+cols+'</div>'+
-    '<label class="plabel" for="ptitle">'+X('Titel','Title')+'</label><select id="ptitle" class="pinput">'+opts+'</select>'+
+    (view.name==='gate'?'':'<label class="plabel" for="ptitle">'+X('Titel','Title')+'</label><select id="ptitle" class="pinput">'+opts+'</select>')+
     (pmsg?'<p class="pmsg" role="alert">'+pmsg+'</p>':'')+
-    '<div class="acts"><button class="btn gold" data-act="psave">'+X('Speichern','Save')+'</button>'+(prof()?'<button class="btn ghost" data-act="pcancel">'+X('Abbrechen','Cancel')+'</button>':'')+'</div></div></section>';
+    '<div class="acts"><button class="btn gold" data-act="psave">'+(view.name==='gate'?X('Anmelden','Sign in'):X('Speichern','Save'))+'</button>'+(prof()?'<button class="btn ghost" data-act="pcancel">'+X('Abbrechen','Cancel')+'</button>':'')+'</div></div></section>';
 }
 function startEdit(){
   var p=prof();
@@ -2865,12 +3106,18 @@ function startEdit(){
 }
 function saveProfile(){
   var nm=cleanName(pdraft.name);
-  if(!nm){pmsg=X('Bitte gib einen Namen ein.','Please enter a name.');renderProfile(false);var inp=$('pname');if(inp)inp.focus();return;}
+  if(!nm){pmsg=X('Bitte gib einen Namen ein.','Please enter a name.');renderEdit();var inp=$('pname');if(inp)inp.focus();return;}
   var old=prof();
   S.settings.profile={name:nm,av:pdraft.av,col:pdraft.col,title:pdraft.title||'',since:old&&old.since?old.since:Date.now()};
   dbPut('settings','profile',S.settings.profile);
-  profileEdit=false;pmsg='';
-  renderNav();renderProfile(false);checkAch();
+  profileEdit=false;pmsg='';pdraft=null;
+  pushScores();
+  renderNav();
+  if(view.name==='gate'){
+    pushToast({t1:X('Angemeldet','Signed in'),t2:esc(nm),t3:Net.online?X('Deine Ergebnisse kommen in die Ranglisten.','Your scores go to the leaderboards.'):X('Offline-Modus: nur auf diesem Gerät.','Offline mode: this device only.')});
+    renderHub(true);window.scrollTo(0,0);
+  }else renderProfile(false);
+  checkAch();
 }
 function renderProfile(anim){
   stopPreviews();
@@ -2899,8 +3146,8 @@ function renderProfile(anim){
   var head;
   if(p){
     head='<section class="pcard-head"><div class="avbig">'+avatarSvg(p.av,p.col,92)+'</div><div class="pinfo"><p class="eyebrow">'+X('Spielerprofil','Player profile')+'</p><h1 class="sh1 pname">'+esc(p.name)+'</h1><p class="sub"><b>'+esc(titleFor(p))+'</b>'+(rk.next?' · '+Xn('noch # Missionen bis ','# missions to ',[rk.next.min-done])+L(rk.next.name):'')+'</p>'+
-      '<p class="pmeta mono">'+(p.since?X('Dabei seit ','Member since ')+new Date(p.since).toLocaleDateString(lang):'')+(fg?' · '+X('Lieblingsspiel: ','Favorite game: ')+esc(L(GAMES[fg].name)):'')+'</p>'+
-      '<div class="acts"><button class="btn ghost sm" data-act="pedit">'+X('Profil bearbeiten','Edit profile')+'</button></div></div><div class="balbig">'+COIN+'<span>'+coins()+'</span></div></section>';
+      '<p class="pmeta mono">'+(p.since?X('Dabei seit ','Member since ')+new Date(p.since).toLocaleDateString(lang):'')+(fg?' · '+X('Lieblingsspiel: ','Favorite game: ')+esc(L(GAMES[fg].name)):'')+(Net.session&&Net.session.email?' · '+esc(Net.session.email):'')+'</p>'+
+      '<p style="margin-top:10px">'+netBadge()+'</p><div class="acts"><button class="btn ghost sm" data-act="pedit">'+X('Profil bearbeiten','Edit profile')+'</button><button class="btn ghost sm" data-act="logout">'+X('Abmelden','Sign out')+'</button></div></div><div class="balbig">'+COIN+'<span>'+coins()+'</span></div></section>';
   }else{
     head='<section class="shophead"><div><p class="eyebrow">'+X('Dein Fortschritt','Your progress')+'</p><h1 class="sh1">'+X('Profil','Profile')+'</h1><p class="sub">'+X('Rang: ','Rank: ')+'<b>'+L(rk.rank.name)+'</b>'+(rk.next?' · '+Xn('noch # Missionen bis ','# missions to ',[rk.next.min-done])+L(rk.next.name):'')+'</p>'+(profileEdit?'':'<div class="acts" style="margin-top:14px"><button class="btn gold" data-act="pcreate">'+X('Profil erstellen','Create profile')+'</button></div>')+'</div><div class="balbig">'+COIN+'<span>'+coins()+'</span></div></section>';
   }
@@ -2913,6 +3160,383 @@ function renderProfile(anim){
 function profileCtaHtml(){
   if(prof())return '';
   return '<section class="daily pcta"><div class="dtxt"><p class="eyebrow">'+X('Profil','Profile')+'</p><p class="dttl">'+X('Erstelle dein Profil','Create your profile')+'</p><p class="dsub">'+X('Wähle Namen, Avatar und Farbe. Dein Profil zeigt Rang, Titel und Lieblingsspiel.','Pick a name, avatar and color. Your profile shows rank, title and favorite game.')+'</p></div><button class="btn gold" data-act="pcreate">'+X('Profil erstellen','Create profile')+'</button></section>';
+}
+
+/* ---------- Anmeldung und Ranglisten ---------- */
+/* Zwei Betriebsarten: Supabase (config.js ausgefüllt, echte Konten), Claude-Datenbank (online veröffentlichte Version) oder offline. */
+var CFG=(window.NL_CONFIG&&typeof window.NL_CONFIG==='object')?window.NL_CONFIG:{};
+var SB_URL=String(CFG.supabaseUrl||'').replace(/\/+$/,''),SB_KEY=String(CFG.supabaseKey||'');
+var Net={mode:'off',online:false,db:null,uid:null,canWrite:true,busy:false,again:false,err:'',session:null};
+var authTab='login',authMsg='',authBusy=false,authEmail='';
+var SB_STORE='neuland-sb-session',memSession=null;
+function sbOn(){return /^https?:\/\//.test(SB_URL)&&SB_KEY.length>20;}
+function needAuth(){return Net.mode==='sb'&&!Net.session;}
+function loggedIn(){return !!prof()&&!needAuth();}
+function loadSession(){
+  try{var r=localStorage.getItem(SB_STORE);if(r){var o=JSON.parse(r);if(o&&o.access_token&&o.refresh_token&&o.uid)return o;}}catch(e){}
+  return memSession;
+}
+function saveSession(o){memSession=o;try{if(o)localStorage.setItem(SB_STORE,JSON.stringify(o));else localStorage.removeItem(SB_STORE);}catch(e){}}
+function setSession(r){
+  var o={access_token:r.access_token,refresh_token:r.refresh_token,expires_at:Number(r.expires_at)||(Math.floor(Date.now()/1000)+(Number(r.expires_in)||3600)),uid:r.user&&r.user.id,email:r.user&&r.user.email||''};
+  Net.session=o;Net.uid=o.uid;Net.online=true;Net.canWrite=true;saveSession(o);
+}
+function sbDrop(){Net.session=null;Net.online=false;Net.uid=null;saveSession(null);}
+function sbReq(path,o){
+  o=o||{};
+  var h={'apikey':SB_KEY,'Content-Type':'application/json','Authorization':'Bearer '+(o.token||SB_KEY)};
+  if(o.prefer)h.Prefer=o.prefer;
+  return fetch(SB_URL+path,{method:o.method||'GET',headers:h,body:o.body?JSON.stringify(o.body):undefined}).then(function(r){
+    return r.text().then(function(t){
+      var j=null;try{j=t?JSON.parse(t):null;}catch(e){}
+      if(!r.ok){var er=new Error((j&&(j.error_description||j.msg||j.message||j.error))||('HTTP '+r.status));er.status=r.status;throw er;}
+      return j;
+    });
+  });
+}
+function sbToken(){
+  var s=Net.session;
+  if(!s)return Promise.reject(new Error('no session'));
+  if(s.expires_at-60>Date.now()/1000)return Promise.resolve(s.access_token);
+  return sbReq('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:s.refresh_token}}).then(function(r){setSession(r);return Net.session.access_token;}).catch(function(e){
+    if(e.status===400||e.status===401||e.status===403)sbDrop();
+    throw e;
+  });
+}
+function sbAuthed(path,o){return sbToken().then(function(tk){o=o||{};o.token=tk;return sbReq(path,o);});}
+function netInit(){
+  if(sbOn()){
+    Net.mode='sb';
+    var s=loadSession();
+    if(!s)return Promise.resolve();
+    Net.session=s;Net.uid=s.uid;Net.online=true;
+    return sbToken().then(function(){},function(){});
+  }
+  return new Promise(function(res){
+    var done=false;
+    function fin(){if(!done){done=true;res();}}
+    if(!window.claude||typeof window.claude.use!=='function'){fin();return;}
+    setTimeout(fin,3500);
+    Promise.all([window.claude.use('db'),window.claude.use('user')]).then(function(r){
+      var db=r[0],user=r[1];
+      if(!db||!user){fin();return;}
+      return user.id().then(function(id){
+        if(!id){fin();return;}
+        Net.mode='claude';Net.db=db;Net.uid=id;Net.online=true;
+        return user.can('data.write').then(function(c){Net.canWrite=c!==false;});
+      }).then(function(){fin();if(view.name==='gate'||view.name==='ranking'||view.name==='profile')redraw();});
+    }).catch(fin);
+  });
+}
+function restoreRemote(){
+  if(!Net.online||prof())return Promise.resolve();
+  function apply(nm,av,col,since){
+    nm=cleanName(nm);
+    if(!nm)return;
+    S.settings.profile={name:nm,av:Math.max(0,Math.min(AV_G.length-1,Math.floor(Number(av)||0))),col:AV_COLS.indexOf(col)>-1?col:AV_COLS[0],title:'',since:Number(since)||Date.now()};
+    dbPut('settings','profile',S.settings.profile);
+  }
+  if(Net.mode==='sb'){
+    return sbAuthed('/rest/v1/players?id=eq.'+encodeURIComponent(Net.uid)+'&select=name,av,col,created_at').then(function(rows){
+      if(rows&&rows[0])apply(rows[0].name,rows[0].av,rows[0].col,Date.parse(rows[0].created_at));
+    }).catch(function(){});
+  }
+  return new Promise(function(res){
+    var t=setTimeout(res,2500);
+    Net.db.doc('lb/'+Net.uid).get().then(function(snap){
+      clearTimeout(t);
+      var x=snap.exists?snap.data():null;
+      if(x)apply(x.name,x.av,x.col,x.since);
+      res();
+    }).catch(function(){clearTimeout(t);res();});
+  });
+}
+function pushScores(){
+  var p=prof();
+  if(!Net.online||!Net.canWrite||!p)return;
+  if(Net.busy){Net.again=true;return;}
+  Net.busy=true;
+  function after(){Net.busy=false;if(Net.again){Net.again=false;pushScores();}}
+  if(Net.mode==='sb'){
+    var rows=[];
+    ORDER.forEach(function(g){var st=S.stats[g];if(st&&st.best>0)rows.push({user_id:Net.uid,game:g,best:Math.floor(st.best),plays:Math.floor(st.plays||0)});});
+    sbAuthed('/rest/v1/players?on_conflict=id',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',body:{id:Net.uid,name:p.name,av:p.av,col:p.col}})
+      .then(function(){return rows.length?sbAuthed('/rest/v1/scores?on_conflict=user_id,game',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',body:rows}):null;})
+      .then(function(){Net.err='';},function(e){Net.err=String(e&&e.status||'error');}).then(after);
+    return;
+  }
+  var d={name:p.name,av:p.av,col:p.col,since:p.since||Date.now(),t:Date.now()};
+  ORDER.forEach(function(g){var st=S.stats[g];if(st&&st.best>0){d['b_'+g]=st.best;d['p_'+g]=st.plays||0;}});
+  Net.db.doc('lb/'+Net.uid).set(d).then(function(){Net.err='';}).catch(function(e){
+    Net.err=(e&&e.code)||'error';
+    if(e&&e.code==='invalid_argument')Net.canWrite=false;
+  }).then(after);
+}
+function netNote(){
+  if(!Net.online)return X('Offline-Modus: Hier siehst du nur dich selbst. Eine gemeinsame Weltrangliste gibt es nur, wenn die Seite mit einem Server verbunden ist.','Offline mode: you only see yourself here. A shared leaderboard only exists when the page is connected to a server.');
+  if(!Net.canWrite)return X('Du hast nur Leserechte. Deine Ergebnisse werden nicht eingetragen.','You have read-only access. Your scores are not submitted.');
+  if(Net.mode==='sb')return X('Alle Spieler weltweit. Deine Bestwerte werden automatisch eingetragen.','Players worldwide. Your best scores are submitted automatically.');
+  return X('Alle Spieler, die diese Seite nutzen. Deine Bestwerte werden automatisch eingetragen.','Everyone playing on this page. Your best scores are submitted automatically.');
+}
+function netBadge(){
+  return '<span class="netbadge '+(Net.online?'on':'off')+'"><i></i>'+(Net.online?X('Online verbunden','Connected online'):X('Offline-Modus','Offline mode'))+'</span>';
+}
+function bestOf(g){return S.stats[g]&&S.stats[g].best?S.stats[g].best:0;}
+
+/* Konto: Anmelden und Registrieren (Supabase) */
+function authError(e){
+  var m=String(e&&e.message||'');
+  if(!e||e.status===undefined)return X('Keine Verbindung zum Server.','No connection to the server.');
+  if(/invalid login/i.test(m))return X('E-Mail oder Passwort stimmt nicht.','Email or password is wrong.');
+  if(/already|registered/i.test(m))return X('Diese E-Mail ist schon registriert. Melde dich an.','This email is already registered. Please sign in.');
+  if(/not confirmed/i.test(m))return X('Bitte bestätige zuerst deine E-Mail.','Please confirm your email first.');
+  if(/password/i.test(m))return X('Das Passwort ist zu schwach. Nimm mindestens 6 Zeichen.','The password is too weak. Use at least 6 characters.');
+  if(e.status===429)return X('Zu viele Versuche. Warte kurz und probiere es noch einmal.','Too many attempts. Wait a moment and try again.');
+  return X('Das hat nicht geklappt. Versuche es später noch einmal.','That did not work. Please try again later.');
+}
+function renderAuth(anim){
+  view={name:'gate'};
+  $app.style.removeProperty('--h');
+  $app.className='app view view-gate'+(anim?' enter':'');
+  var reg=authTab==='register';
+  $app.innerHTML=
+   '<section class="shophead"><div><p class="eyebrow">'+X('Willkommen bei Neuland Arcade','Welcome to Neuland Arcade')+'</p><h1 class="sh1">'+(reg?X('Konto erstellen','Create account'):X('Anmelden','Sign in'))+'</h1><p class="sub">'+X('Melde dich an, um zu spielen. Dein Konto speichert deinen Namen und deine Bestwerte für die Weltrangliste.','Sign in to play. Your account stores your name and best scores for the world leaderboard.')+'</p></div></section>'+
+   '<form class="authbox" id="authform" novalidate>'+
+   '<div class="tabs" role="tablist"><button type="button" role="tab" data-act="atab" data-id="login" aria-selected="'+!reg+'">'+X('Anmelden','Sign in')+'</button><button type="button" role="tab" data-act="atab" data-id="register" aria-selected="'+reg+'">'+X('Registrieren','Register')+'</button></div>'+
+   '<label class="plabel" for="aemail">'+X('E-Mail','Email')+'</label><input id="aemail" class="pinput" type="email" autocomplete="email" inputmode="email" value="'+esc(authEmail)+'">'+
+   '<label class="plabel" for="apass">'+X('Passwort','Password')+'</label><input id="apass" class="pinput" type="password" autocomplete="'+(reg?'new-password':'current-password')+'">'+
+   (authMsg?'<p class="pmsg" role="alert">'+authMsg+'</p>':'')+
+   '<div class="acts"><button class="btn gold" type="submit" id="asubmit">'+(reg?X('Konto erstellen','Create account'):X('Anmelden','Sign in'))+'</button></div></form>';
+}
+function doAuth(){
+  if(authBusy)return;
+  var em=String($('aemail').value||'').trim(),pw=String($('apass').value||'');
+  authEmail=em;
+  if(!/^\S+@\S+\.\S+$/.test(em)){authMsg=X('Bitte gib eine gültige E-Mail-Adresse ein.','Please enter a valid email address.');renderAuth(false);return;}
+  if(pw.length<6){authMsg=X('Das Passwort braucht mindestens 6 Zeichen.','The password needs at least 6 characters.');renderAuth(false);return;}
+  authBusy=true;authMsg='';
+  var b=$('asubmit');if(b)b.disabled=true;
+  var reg=authTab==='register';
+  var rq=reg?sbReq('/auth/v1/signup',{method:'POST',body:{email:em,password:pw}}):sbReq('/auth/v1/token?grant_type=password',{method:'POST',body:{email:em,password:pw}});
+  rq.then(function(r){
+    authBusy=false;
+    if(!r||!r.access_token){
+      authMsg=X('Fast geschafft: Wir haben dir eine E-Mail zur Bestätigung geschickt. Klicke auf den Link und melde dich danach an.','Almost there: we sent you a confirmation email. Click the link, then sign in.');
+      authTab='login';renderAuth(false);return;
+    }
+    setSession(r);
+    return restoreRemote().then(function(){
+      renderNav();
+      if(prof()){
+        pushScores();
+        pushToast({t1:X('Angemeldet','Signed in'),t2:esc(prof().name),t3:X('Deine Ergebnisse kommen in die Ranglisten.','Your scores go to the leaderboards.')});
+        renderHub(true);window.scrollTo(0,0);
+      }else{startEdit();renderGate(true);}
+    });
+  }).catch(function(e){authBusy=false;authMsg=authError(e);renderAuth(false);});
+}
+function doLogout(){adminOn=false;adminPlayers=null;
+  if(Net.mode==='sb'&&Net.session){sbReq('/auth/v1/logout',{method:'POST',token:Net.session.access_token}).catch(function(){});sbDrop();}
+  S.settings.profile=null;dbPut('settings','profile',null);profileEdit=false;pdraft=null;authMsg='';authTab='login';
+  renderNav();renderGate(true);window.scrollTo(0,0);
+}
+
+/* Anmeldeseite */
+function renderGate(anim){
+  stopPreviews();
+  if(stopGame){stopGame();stopGame=null;}
+  if(needAuth()){renderAuth(anim);return;}
+  view={name:'gate'};
+  if(!pdraft||!profileEdit)startEdit();
+  $app.style.removeProperty('--h');
+  $app.className='app view view-gate'+(anim?' enter':'');
+  var bar;
+  if(pendingImport){
+    bar='<div class="saveconf"><span class="warn">'+X('Den aktuellen Spielstand mit dieser Datei überschreiben?','Replace your current progress with this file?')+'</span><span class="acts"><button class="btn gold sm" data-act="import-yes">'+X('Ja, laden','Yes, load')+'</button><button class="btn ghost sm" data-act="import-no">'+X('Abbrechen','Cancel')+'</button></span></div>';
+  }else{
+    bar='<div class="acts"><button class="btn ghost sm" data-act="import-pick">'+X('Spielstand importieren','Import save')+'</button><input type="file" id="impfile" accept="application/json,.json" hidden></div>';
+  }
+  var sub=Net.mode==='sb'?X('Konto bestätigt. Wähle jetzt deinen Spielernamen für die Ranglisten.','Account ready. Now pick your player name for the leaderboards.'):
+    (Net.online?X('Du bist mit deinem Claude-Konto verbunden. Wähle deinen Spielernamen, damit du in den Ranglisten erscheinst.','You are connected with your Claude account. Pick your player name so you appear on the leaderboards.'):X('Erstelle dein Spielerkonto. Es liegt nur in diesem Browser. Ranglisten für alle Spieler gibt es nur, wenn die Seite mit einem Server verbunden ist.','Create your player account. It lives only in this browser. Leaderboards for all players only exist when the page is connected to a server.'));
+  $app.innerHTML=
+   '<section class="shophead"><div><p class="eyebrow">'+X('Willkommen bei Neuland Arcade','Welcome to Neuland Arcade')+'</p><h1 class="sh1">'+(Net.mode==='sb'?X('Spielername wählen','Choose your name'):X('Anmelden','Sign in'))+'</h1><p class="sub">'+sub+'</p><p style="margin-top:12px">'+netBadge()+'</p></div></section>'+
+   editorHtml()+
+   '<div class="foot savebox"><span>'+(saveMsg||X('Du hast schon einen Spielstand? Importiere deine Sicherungsdatei.','Already have a save? Import your backup file.'))+'</span>'+bar+'</div>';
+}
+
+function sha256(str){
+  var u=unescape(encodeURIComponent(str)),b=[],i,j;
+  for(i=0;i<u.length;i++)b[i>>2]|=u.charCodeAt(i)<<(24-(i%4)*8);
+  var l=u.length*8;b[l>>5]|=0x80<<(24-l%32);b[(((l+64)>>9)<<4)+15]=l;
+  var K=[],H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19],p=2,n=0;
+  function ok(x){for(var d=2;d*d<=x;d++)if(x%d===0)return false;return true;}
+  function fr(x){return((x-Math.floor(x))*4294967296)|0;}
+  while(n<64){if(ok(p)){K[n++]=fr(Math.pow(p,1/3));}p++;}
+  function rr(x,c){return(x>>>c)|(x<<(32-c));}
+  for(j=0;j<b.length;j+=16){
+    var w=[],a=H.slice(),t1,t2;
+    for(i=0;i<64;i++){
+      if(i<16)w[i]=b[j+i]|0;
+      else{var s0=rr(w[i-15],7)^rr(w[i-15],18)^(w[i-15]>>>3),s1=rr(w[i-2],17)^rr(w[i-2],19)^(w[i-2]>>>10);w[i]=(w[i-16]+s0+w[i-7]+s1)|0;}
+      t1=(a[7]+(rr(a[4],6)^rr(a[4],11)^rr(a[4],25))+((a[4]&a[5])^(~a[4]&a[6]))+K[i]+w[i])|0;
+      t2=((rr(a[0],2)^rr(a[0],13)^rr(a[0],22))+((a[0]&a[1])^(a[0]&a[2])^(a[1]&a[2])))|0;
+      a=[(t1+t2)|0,a[0],a[1],a[2],(a[3]+t1)|0,a[4],a[5],a[6]];
+    }
+    for(i=0;i<8;i++)H[i]=(H[i]+a[i])|0;
+  }
+  return H.map(function(h){return('00000000'+(h>>>0).toString(16)).slice(-8);}).join('');
+}
+
+/* ---------- Admin-Bereich ---------- */
+/* Der Code wird nur als SHA-256-Hash gespeichert (config.js: adminHash). Ohne eigenen Eintrag gilt der Standardcode. */
+var ADMIN_DEFAULT='d2de791f81ae861b753a6b86afb6c9f6c806f486d1a2807f554cdafc3117c74f';
+var ADMIN_HASH=String(CFG.adminHash||ADMIN_DEFAULT).toLowerCase();
+var adminOn=false,adminFails=0,adminLockUntil=0,adminMsg='',adminNote='',adminPlayers=null,adminHashOut='';
+function renderAdmin(anim){
+  stopPreviews();
+  if(stopGame){stopGame();stopGame=null;}
+  view={name:'admin'};
+  $app.style.removeProperty('--h');
+  $app.className='app view view-admin'+(anim?' enter':'');
+  if(!adminOn){
+    $app.innerHTML=
+     '<section class="shophead"><div><p class="eyebrow">Admin</p><h1 class="sh1">'+X('Zugangscode','Access code')+'</h1><p class="sub">'+X('Dieser Bereich ist nur mit dem Admin-Code zugänglich.','This area needs the admin code.')+'</p></div></section>'+
+     '<form class="authbox" id="adminform" novalidate><label class="plabel" for="acode">'+X('Admin-Code','Admin code')+'</label><input id="acode" class="pinput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">'+
+     (adminMsg?'<p class="pmsg" role="alert">'+esc(adminMsg)+'</p>':'')+
+     '<div class="acts"><button class="btn gold" type="submit">'+X('Öffnen','Open')+'</button><button class="btn ghost" type="button" data-act="home">'+X('Zurück','Back')+'</button></div></form>';
+    var f=$('acode');if(f&&anim!==false)setTimeout(function(){try{f.focus();}catch(e){}},50);
+    return;
+  }
+  var mode=Net.mode==='sb'?'Supabase':(Net.mode==='claude'?'Claude':X('Offline','Offline'));
+  var totals='<p class="admk">'+X('Münzen','Coins')+' <b>'+coins()+'</b> · '+X('Missionen','Missions')+' <b>'+doneTotal()+'/'+allMissions().length+'</b> · '+X('Runden','Rounds')+' <b>'+plays()+'</b> · '+X('Modus','Mode')+' <b>'+mode+'</b></p>';
+  var uid=Net.uid?'<p class="admk">'+X('Deine Nutzer-ID (für die Admin-Rechte auf dem Server):','Your user id (for server admin rights):')+' <code class="admc">'+esc(Net.uid)+'</code></p>':'';
+  var pl='';
+  if(Net.mode==='sb'){
+    pl='<div class="admbox"><h3>'+X('Spieler verwalten','Manage players')+'</h3><p class="admk">'+X('Löschen entfernt den Spieler samt Ranglisteneinträgen. Das klappt nur mit Admin-Rechten auf dem Server (siehe supabase-setup.sql).','Deleting removes the player and all leaderboard entries. It only works with server admin rights (see supabase-setup.sql).')+'</p><div class="acts"><button class="btn ghost sm" data-act="aplayers">'+X('Spielerliste laden','Load player list')+'</button></div>';
+    if(adminPlayers){
+      pl+=adminPlayers.length?'<ul class="admlist">'+adminPlayers.map(function(p){return '<li><span>'+esc(cleanName(p.name)||'?')+(p.id===Net.uid?' <em>'+X('(du)','(you)')+'</em>':'')+'</span><button class="btn ghost sm" data-act="adel" data-id="'+esc(p.id)+'">'+X('Löschen','Delete')+'</button></li>';}).join('')+'</ul>':'<p class="admk">'+X('Keine Spieler gefunden.','No players found.')+'</p>';
+    }
+    pl+='</div>';
+  }
+  $app.innerHTML=
+   '<section class="shophead"><div><p class="eyebrow">Admin</p><h1 class="sh1">'+X('Verwaltung','Control panel')+'</h1><p class="sub">'+X('Die Werkzeuge ändern den Spielstand in diesem Browser. Nur die Spielerverwaltung wirkt auf dem Server.','These tools change the save in this browser. Only player management acts on the server.')+'</p></div><div class="acts"><button class="btn ghost" data-act="alock">'+X('Admin sperren','Lock admin')+'</button></div></section>'+
+   (adminNote?'<p class="admnote" role="status">'+esc(adminNote)+'</p>':'')+
+   '<div class="admgrid">'+
+   '<div class="admbox"><h3>'+X('Übersicht','Overview')+'</h3>'+totals+uid+'</div>'+
+   '<div class="admbox"><h3>'+X('Münzen','Coins')+'</h3><div class="admrow"><input id="acoin" class="pinput" type="number" inputmode="numeric" value="500" min="0" max="999999"><button class="btn gold sm" data-act="acoins-add">'+X('Hinzufügen','Add')+'</button><button class="btn ghost sm" data-act="acoins-set">'+X('Setzen','Set')+'</button></div></div>'+
+   '<div class="admbox"><h3>'+X('Freischalten','Unlock')+'</h3><div class="acts"><button class="btn ghost sm" data-act="aunlock-games">'+X('Alle Spiele','All games')+'</button><button class="btn ghost sm" data-act="aunlock-all">'+X('Alle Belohnungen','All rewards')+'</button><button class="btn ghost sm" data-act="amissions">'+X('Alle Missionen','All missions')+'</button></div></div>'+
+   '<div class="admbox"><h3>'+X('Zurücksetzen','Reset')+'</h3><div class="acts"><button class="btn ghost sm" data-act="areset-daily">'+X('Tagesbonus','Daily bonus')+'</button><button class="btn ghost sm" data-act="areset-wheel">'+X('Glücksräder','Wheels')+'</button><button class="btn ghost sm" data-act="areset-chal">'+X('Tagesherausforderung','Daily challenge')+'</button></div></div>'+
+   pl+
+   '<div class="admbox"><h3>'+X('Neuen Admin-Code festlegen','Set a new admin code')+'</h3><p class="admk">'+X('Gib einen langen Code ein. Du bekommst eine Zeile für config.js. Der Code selbst wird nirgends gespeichert.','Enter a long code. You get one line for config.js. The code itself is never stored.')+'</p><div class="admrow"><input id="anew" class="pinput" type="text" autocomplete="off" spellcheck="false"><button class="btn gold sm" data-act="agen">'+X('Zeile erzeugen','Create line')+'</button></div>'+(adminHashOut?'<code class="admc admout">adminHash: \''+esc(adminHashOut)+'\'</code>':'')+'</div>'+
+   '</div>';
+}
+function adminTry(){
+  var now=Date.now();
+  if(now<adminLockUntil){adminMsg=Xn('Zu viele Versuche. Warte # Sekunden.','Too many attempts. Wait # seconds.',[Math.ceil((adminLockUntil-now)/1000)]);renderAdmin(false);return;}
+  var c=String(($('acode')||{}).value||'');
+  if(c&&sha256('nl:'+c)===ADMIN_HASH){adminOn=true;adminFails=0;adminMsg='';adminNote='';renderAdmin(true);return;}
+  adminFails++;adminMsg=X('Falscher Code.','Wrong code.');
+  if(adminFails>=5){adminFails=0;adminLockUntil=now+30000;adminMsg=X('Zu viele Versuche. Der Zugang ist 30 Sekunden gesperrt.','Too many attempts. Access is locked for 30 seconds.');}
+  renderAdmin(false);
+}
+function adminDo(act,id){
+  var n;
+  if(act==='acoins-add'||act==='acoins-set'){
+    n=Math.max(0,Math.min(999999,Math.floor(Number(($('acoin')||{}).value)||0)));
+    if(act==='acoins-add'){addCoins(n);adminNote='+'+n+X(' Münzen',' coins');}
+    else{S.settings.coins=n;dbPut('settings','coins',n);adminNote=X('Münzen gesetzt auf ','Coins set to ')+n;}
+  }else if(act==='aunlock-games'||act==='aunlock-all'){
+    var cnt=0;
+    Object.keys(REW).forEach(function(k){
+      var r=REW[k];
+      if(act==='aunlock-games'&&r.type!=='game')return;
+      if(!S.rewards[k]&&DEFAULT_OWNED.indexOf(k)<0){S.rewards[k]={at:Date.now()};dbPut('rewards',k,S.rewards[k]);cnt++;}
+    });
+    adminNote=cnt+X(' Belohnungen freigeschaltet',' rewards unlocked');
+  }else if(act==='amissions'){
+    var c2=0;
+    allMissions().forEach(function(m){
+      if(S.missions[m.id])return;
+      S.missions[m.id]={at:Date.now()};dbPut('missions',m.id,S.missions[m.id]);c2++;
+      if(m.reward&&!S.rewards[m.reward]){S.rewards[m.reward]={at:Date.now()};dbPut('rewards',m.reward,S.rewards[m.reward]);}
+    });
+    adminNote=c2+X(' Missionen abgeschlossen',' missions completed');
+  }else if(act==='areset-daily'){
+    S.settings.daily=null;dbPut('settings','daily',null);adminNote=X('Tagesbonus zurückgesetzt','Daily bonus reset');
+  }else if(act==='areset-wheel'){
+    var w=wheelState();w.last='';w.goldLast='';dbPut('settings','wheel',w);adminNote=X('Glücksräder wieder drehbar','Wheels ready again');
+  }else if(act==='areset-chal'){
+    S.settings.chal=null;dbPut('settings','chal',null);adminNote=X('Neue Tagesherausforderung','New daily challenge');
+  }else if(act==='agen'){
+    var v=String(($('anew')||{}).value||'');
+    if(v.length<8){adminNote=X('Der Code braucht mindestens 8 Zeichen.','The code needs at least 8 characters.');adminHashOut='';}
+    else{adminHashOut=sha256('nl:'+v);adminNote=X('Kopiere die Zeile in config.js.','Copy the line into config.js.');}
+  }else if(act==='aplayers'){
+    adminNote=X('Lade Spieler …','Loading players …');renderAdmin(false);
+    sbAuthed('/rest/v1/players?select=id,name&order=created_at.desc&limit=100').then(function(r){adminPlayers=r||[];adminNote=adminPlayers.length+X(' Spieler geladen',' players loaded');renderAdmin(false);},function(){adminNote=X('Die Liste konnte nicht geladen werden.','The list could not be loaded.');renderAdmin(false);});
+    return;
+  }else if(act==='adel'){
+    if(!id)return;
+    sbAuthed('/rest/v1/players?id=eq.'+encodeURIComponent(id),{method:'DELETE',prefer:'return=representation'}).then(function(r){
+      if(r&&r.length){adminPlayers=(adminPlayers||[]).filter(function(p){return p.id!==id;});adminNote=X('Spieler gelöscht','Player deleted');}
+      else adminNote=X('Nichts gelöscht. Dir fehlen die Admin-Rechte auf dem Server.','Nothing deleted. You lack admin rights on the server.');
+      renderAdmin(false);
+    },function(){adminNote=X('Löschen fehlgeschlagen.','Delete failed.');renderAdmin(false);});
+    return;
+  }
+  renderNav(true);renderAdmin(false);
+}
+
+/* Ranglisten */
+var rankGame='funken',rankTok=0;
+function rowsHtml(rows,g){
+  if(!rows.length)return '<p class="lbmsg">'+X('Noch keine Einträge. Sei der Erste!','No entries yet. Be the first!')+'</p>';
+  var unit=esc(L(GAMES[g].unit));
+  return '<ol class="lbl">'+rows.map(function(r,i){
+    return '<li class="lbrow'+(r.me?' me':'')+(i<3?' top'+(i+1):'')+'"><span class="lbn mono">'+(i+1)+'</span>'+avatarSvg(r.av,r.col,36)+'<span class="lbname">'+esc(r.name)+(r.me?' <em>'+X('(du)','(you)')+'</em>':'')+'</span><span class="lbv mono">'+r.v+' <small>'+unit+'</small></span></li>';
+  }).join('')+'</ol>';
+}
+function mineRow(g){
+  var p=prof(),b=bestOf(g);
+  return p&&b>0?{id:'me',me:true,name:p.name,av:p.av,col:p.col,v:b}:null;
+}
+function loadBoard(){
+  var tok=++rankTok,g=rankGame;
+  function put(h){if(tok===rankTok&&view.name==='ranking'){var b=$('lbbody');if(b)b.innerHTML=h;}}
+  if(!Net.online){var m=mineRow(g);put(rowsHtml(m?[m]:[],g));return;}
+  put('<p class="lbmsg">'+X('Lade Rangliste …','Loading leaderboard …')+'</p>');
+  if(Net.mode==='sb'){
+    sbAuthed('/rest/v1/scores?game=eq.'+encodeURIComponent(g)+'&best=gt.0&select=best,plays,user_id,players(name,av,col)&order=best.desc,updated_at.asc&limit=50').then(function(list){
+      var rows=(list||[]).map(function(r){
+        var pl=r.players||{};
+        return{id:r.user_id,me:r.user_id===Net.uid,name:cleanName(pl.name)||'?',av:Math.max(0,Math.floor(Number(pl.av)||0)),col:AV_COLS.indexOf(pl.col)>-1?pl.col:AV_COLS[0],v:Number(r.best)||0};
+      });
+      var mine=bestOf(g),inList=rows.some(function(r){return r.me;}),extra='';
+      if(!inList&&mine>0)extra='<p class="lbmsg">'+X('Dein Bestwert: ','Your best: ')+mine+' '+esc(L(GAMES[g].unit))+'</p>';
+      put(rowsHtml(rows,g)+extra);
+    }).catch(function(){put('<p class="lbmsg">'+X('Die Rangliste konnte nicht geladen werden.','The leaderboard could not be loaded.')+'</p>');});
+    return;
+  }
+  Net.db.collection('lb').where('b_'+g,'>',0).orderBy('b_'+g,'desc').limit(50).get().then(function(snap){
+    var rows=snap.docs.map(function(d){
+      var x=d.data()||{};
+      return{id:d.id,me:d.id===Net.uid,name:cleanName(x.name)||'?',av:Math.max(0,Math.floor(Number(x.av)||0)),col:AV_COLS.indexOf(x.col)>-1?x.col:AV_COLS[0],v:Number(x['b_'+g])||0};
+    });
+    var mine=bestOf(g),inList=rows.some(function(r){return r.me;}),extra='';
+    if(!inList&&mine>0)extra='<p class="lbmsg">'+X('Dein Bestwert: ','Your best: ')+mine+' '+esc(L(GAMES[g].unit))+(Net.canWrite?'':'')+'</p>';
+    put(rowsHtml(rows,g)+extra);
+  }).catch(function(){put('<p class="lbmsg">'+X('Die Rangliste konnte nicht geladen werden.','The leaderboard could not be loaded.')+'</p>');});
+}
+function renderRanking(anim){
+  stopPreviews();
+  view={name:'ranking'};
+  $app.style.removeProperty('--h');
+  $app.className='app view view-ranking'+(anim?' enter':'');
+  var tabs=ORDER.map(function(g){return '<button role="tab" data-act="rgame" data-id="'+g+'" aria-selected="'+(g===rankGame)+'">'+esc(L(GAMES[g].name))+'</button>';}).join('');
+  $app.innerHTML=
+   '<section class="shophead"><div><p class="eyebrow">'+X('Weltrangliste','World leaderboard')+'</p><h1 class="sh1">'+esc(L(GAMES[rankGame].name))+'</h1><p class="sub">'+netNote()+'</p><p style="margin-top:12px">'+netBadge()+'</p></div></section>'+
+   '<div class="tabs rtabs" role="tablist" aria-label="'+X('Spiel wählen','Choose a game')+'">'+tabs+'</div><div class="lb" id="lbbody"></div>';
+  loadBoard();
 }
 
 function themeSwatch(r){return '<div class="thprev'+(r.anim?' anim':'')+'" style="--a:'+r.accent+'"><span class="b1"></span><span class="b2"></span><span class="b3"></span></div>';}
@@ -2963,8 +3587,9 @@ function refreshView(){
   redraw();
 }
 function redraw(){
-  if(view.name==='hub')renderHub(false);else if(view.name==='shop')renderShop(false);else if(view.name==='profile')renderProfile(false);else if(view.name==='wheel')renderWheel(false);else fillGame();
+  if(view.name==='hub')renderHub(false);else if(view.name==='shop')renderShop(false);else if(view.name==='profile')renderProfile(false);else if(view.name==='wheel')renderWheel(false);else if(view.name==='ranking')renderRanking(false);else if(view.name==='gate')renderGate(false);else if(view.name==='admin')renderAdmin(false);else fillGame();
 }
+function renderEdit(){if(view.name==='gate')renderGate(false);else renderProfile(false);}
 function easter(){
   party();
   var first=!S.settings.egg;
@@ -3021,6 +3646,10 @@ document.addEventListener('click',function(e){
   if(langOpen&&!e.target.closest('.langwrap')){langOpen=false;renderNav();}
   var el=e.target.closest('[data-act]');if(!el)return;
   var act=el.getAttribute('data-act'),id=el.getAttribute('data-id');
+  if(!loggedIn()&&['langmenu','lang','sound','psave','pav','pcol','close-toast','import-pick','import-yes','import-no','atab'].indexOf(act)<0){renderGate(true);return;}
+  if(act==='admin'){renderAdmin(true);window.scrollTo(0,0);return;}
+  if(/^(acoins|aunlock|amissions|areset|agen|aplayers|adel)/.test(act)){if(adminOn)adminDo(act,id);return;}
+  if(act==='alock'){adminOn=false;adminNote='';adminPlayers=null;adminHashOut='';leaveGame();return;}
   if(act==='play'||act==='open-game'){
     if(stopGame){stopGame();stopGame=null;}
     var t=el.closest('.toast');if(t)t.remove();
@@ -3041,7 +3670,7 @@ document.addEventListener('click',function(e){
   else if(act==='export'){exportSave();}
   else if(act==='import-pick'){var inp=$('impfile');if(inp)inp.click();}
   else if(act==='import-yes'){applyImport();}
-  else if(act==='import-no'){pendingImport=null;saveMsg='';renderProfile(false);}
+  else if(act==='import-no'){pendingImport=null;saveMsg='';renderEdit();}
   else if(act==='shop'){
     if(stopGame){stopGame();stopGame=null;}
     var ts=el.closest('.toast');if(ts)ts.remove();
@@ -3078,9 +3707,16 @@ document.addEventListener('click',function(e){
     var pi=$('pname');if(pi)pi.focus();
   }
   else if(act==='pcancel'){profileEdit=false;pmsg='';renderProfile(false);}
+  else if(act==='rank'){if(id&&GAMES[id])rankGame=id;if(stopGame){stopGame();stopGame=null;}var tr2=el.closest('.toast');if(tr2)tr2.remove();renderRanking(true);window.scrollTo(0,0);}
+  else if(act==='atab'){authTab=id==='register'?'register':'login';authMsg='';var ae=$('aemail');if(ae)authEmail=ae.value;renderAuth(false);}
+  else if(act==='rgame'){if(GAMES[id]){rankGame=id;renderRanking(false);}}
+  else if(act==='logout'){
+    if(el.getAttribute('data-confirm')!=='1'){el.setAttribute('data-confirm','1');el.textContent=X('Wirklich abmelden?','Really sign out?');setTimeout(function(){if(el.isConnected&&el.getAttribute('data-confirm')==='1'){el.removeAttribute('data-confirm');el.textContent=X('Abmelden','Sign out');}},3500);}
+    else{doLogout();}
+  }
   else if(act==='psave'){saveProfile();}
-  else if(act==='pav'&&pdraft){pdraft.av=Number(id)||0;renderProfile(false);}
-  else if(act==='pcol'&&pdraft){pdraft.col=AV_COLS[Number(id)]||AV_COLS[0];renderProfile(false);}
+  else if(act==='pav'&&pdraft){pdraft.av=Number(id)||0;renderEdit();}
+  else if(act==='pcol'&&pdraft){pdraft.col=AV_COLS[Number(id)]||AV_COLS[0];renderEdit();}
   else if(act==='sound'){
     S.settings.sound=!S.settings.sound;dbPut('settings','sound',S.settings.sound);
     renderNav();
@@ -3102,14 +3738,15 @@ document.addEventListener('click',function(e){
   else if(act==='reset-yes'){
     resetAsk=false;
     S.missions={};S.rewards={};S.stats={};S.settings.bg='bg-tiefe';S.settings.cursor='cur-standard';S.settings.theme='theme-standard';S.settings.coins=0;S.settings.egg=false;
-    S.settings.eggs={};S.settings.daily=null;S.settings.ach={};S.settings.earned=0;S.settings.langSwitched=false;S.settings.night=false;S.settings.secrets={};
+    S.settings.eggs={};S.settings.daily=null;S.settings.ach={};S.settings.earned=0;S.settings.langSwitched=false;S.settings.night=false;S.settings.secrets={};S.settings.chal=null;S.settings.chalN=0;
     var w0=wheelState();S.settings.wheel={last:w0.last,goldLast:w0.goldLast,gold:false,goldSpins:0,spins:0,big:0};
     dbClearAll().then(function(){dbPut('settings','sound',S.settings.sound);dbPut('settings','lang',lang);dbPut('settings','coins',0);dbPut('settings','wheel',S.settings.wheel);if(S.settings.profile)dbPut('settings','profile',S.settings.profile);});
     applyLook();renderNav();renderHub(false);
   }
 });
 
-document.addEventListener('input',function(e){var t=e.target;if(t&&t.id==='pname'&&pdraft)pdraft.name=t.value;});
+document.addEventListener('input',function(e){var t=e.target;if(t&&t.id==='pname'&&pdraft)pdraft.name=t.value;if(t&&t.id==='aemail')authEmail=t.value;});
+document.addEventListener('submit',function(e){if(e.target&&e.target.id==='adminform'){e.preventDefault();adminTry();return;}if(e.target&&e.target.id==='authform'){e.preventDefault();doAuth();}});
 document.addEventListener('change',function(e){
   var t=e.target;
   if(t&&t.id==='ptitle'&&pdraft)pdraft.title=t.value;
@@ -3153,8 +3790,11 @@ function boot(){
     var b=REW[S.settings.bg],c=REW[S.settings.cursor];
     if(!b||b.type!=='bg'||!owned(S.settings.bg))S.settings.bg='bg-tiefe';
     if(!c||c.type!=='cursor'||!owned(S.settings.cursor))S.settings.cursor='cur-standard';
-    applyLook();renderNav();renderHub(true);
-    setTimeout(checkAch,1200);
+    netInit().then(restoreRemote).then(function(){
+      applyLook();renderNav();
+      if(loggedIn()){renderHub(true);pushScores();}else renderGate(true);
+      setTimeout(checkAch,1200);
+    });
   });
 }
 try{boot();}catch(err){showFatal(err);}
