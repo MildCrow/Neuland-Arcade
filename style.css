@@ -485,3 +485,6 @@ h1 .ln.out{-webkit-text-stroke-color:var(--accent)}
 .admlist li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 10px;border:1px solid var(--line);border-radius:10px}
 .admlist li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .view-admin .shophead{align-items:flex-start;gap:16px}
+.netwhy{display:block;margin-top:8px;max-width:520px;font-size:13px;line-height:1.5;color:#ffb48a}
+
+/* Wochenaufgaben, Level, Box, Vollbild */
